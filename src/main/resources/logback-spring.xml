@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- 循环打印日志 -->
+    <appender name="dailyRollingFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>/var/logdemo/log/app.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <FileNamePattern>log.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- keep 30 days' worth of history -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg %n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- 默认打印级别 -->
+    <logger name="com.routz.springdemo.logdemo" level="TRACE" >
+        <appender-ref ref="dailyRollingFileAppender"/>
+    </logger>
+
+    <!-- 开发打印级别 -->
+    <springProfile name="dev">
+        <logger name="com.routz.springdemo.logdemo" level="DEBUG" />
+    </springProfile>
+
+    <!-- 上线打印级别 -->
+    <springProfile name="staging">
+        <logger name="com.routz.springdemo.logdemo" level="INFO" />
+    </springProfile>
+
+</configuration>
